@@ -106,7 +106,7 @@
             }
         });
 
-        app.controller("ktdn", function ($scope, $http, $routeParams) {
+        app.controller("ktdn", function ($scope, $http, $routeParams, $interval) {
             if (sessionStorage.getItem("username") == "" || sessionStorage.getItem("username") == null) {
                 document.location = "#!home";
                 var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle'), {
@@ -122,6 +122,18 @@
                 $scope.indexch = 1;
                 $scope.startch = 0;
                 $scope.tongdiem = 0;
+                $scope.count = {};
+                
+                var startTime = new Date().getTime();
+                console.log(startTime)
+                var countDown = function() {
+                    var now = new Date().getTime();
+                    var s = Math.floor((now - startTime)/1000);
+                    var remaining = 30*60 - s;
+                    $scope.count.minutes= String(Math.floor(remaining/60));
+                    $scope.count.seconds= remaining%60;
+                };
+                $interval(countDown, 1000);
 
                 $http.get("db/Quizs/" + idmh + ".js").then(function (d) {
                     $scope.listch = d.data;
