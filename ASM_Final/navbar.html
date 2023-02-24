@@ -1,0 +1,56 @@
+<nav class="row mb-3">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100" style="min-height: 65px;">
+        <a class="navbar-brand" href="index.html"> <img src="images/logo.png" width="135px"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav nav-pills mb-3 me-auto mb-2 mb-lg-0" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-white" href="#!home">Trang chủ</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-white" href="#!introduce">Giới thiệu</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-white" href="#!contact">Liên Hệ</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-white" href="#!feedback">Góp ý</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-white" href="#!Q&A">Hỏi đáp</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav" ng-controller="tttk">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="" ng-hide="htdangnhap">Tài khoản</span>
+                        <span class="" ng-show="htdangnhap">Chào : {{hoten}}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-dark"
+                        aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal3"
+                            ng-hide="tagdk">Đăng ký</a>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal1" ng-hide="tagdn">
+                            Đăng nhập
+                        </a>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal2"
+                            ng-hide="tagqmk">Quên mật
+                            khẩu</a>
+                        <div ng-show="htdangnhap">
+                            <a class="dropdown-item" ng-controller="signin" ng-click="dx()">Đăng xuất</a>
+                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal4">Đổi mật
+                                khẩu</a>
+                            <a class="dropdown-item" href="#!updateaccount">Cập nhật tài khoản</a>
+                        </div>
+
+                        <!-- <div class="dropdown-divider"></div> -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</nav>

@@ -1,0 +1,73 @@
+html,
+body {
+    background: white;
+
+}
+
+#page-content {
+    flex: 1 0 auto;
+}
+
+.list-group-item:hover{
+    background-color: gray;
+}
+
+.b{
+    color: gray;
+
+}
+
+.card {
+    background: white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 0;
+    margin-bottom: 1rem;
+}
+
+.card-body {
+    padding: 5rem 1rem;
+}
+
+.form-control {
+    border: 1px solid #596280;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    font-size: 15px;
+    background: white;
+    color: #000000;
+}
+
+.nav-item:hover {
+    border: 2px solid gray;
+    border-radius: 15px;
+}
+
+.itemmonhoc {
+    border-radius: 15px;
+}
+
+.itemmonhoc:hover {
+    background-color: gray;
+    border: 2px solid gray;
+    border-radius: 15px;
+    color: white;
+}
+
+.bordertop {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+
+.dapanhover {
+    padding-left: 34px;
+}
+
+.dapanhover:hover {
+    border: 2px solid gray;
+    border-radius: 15px;
+}
+

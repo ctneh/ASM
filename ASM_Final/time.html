@@ -1,0 +1,30 @@
+<div class="header">
+	<h1>Trang chủ</h1>
+	<div id="countdown"></div>
+  </div>
+  
+  <script>
+	// Đếm ngược thời gian trong 10 phút
+	var countDownDate = new Date().getTime() + 10 * 60 * 1000;
+  
+	// Cập nhật đếm ngược sau mỗi giây
+	var countdownTimer = setInterval(function() {
+	  // Tính toán thời gian còn lại
+	  var now = new Date().getTime();
+	  var distance = countDownDate - now;
+  
+	  // Tính toán phút và giây
+	  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+	  // Hiển thị thời gian còn lại
+	  document.getElementById("countdown").innerHTML = minutes + "m " + seconds + "s ";
+  
+	  // Khi đếm ngược kết thúc, hiển thị thông báo
+	  if (distance < 0) {
+		clearInterval(countdownTimer);
+		document.getElementById("countdown").innerHTML = "Hết thời gian!";
+	  }
+	}, 1000);
+  </script>
+  

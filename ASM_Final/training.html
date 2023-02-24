@@ -1,0 +1,106 @@
+    <!-- training -->
+<div>
+    <form>
+        <div class="card" ng-repeat="ch in listch |limitTo:1:startch">
+            <div class="card-header font-weight-blod">
+                        <b class="h2">{{tenmthi}} </b>
+                        <!-- <h1>Countdown Timer: {{minutes}}:{{seconds}}</h1> -->
+
+                        
+              </div>
+              
+              
+            <div class="card-body" ng-if="anhienKQ">
+                <h3 class="card-title">Câu {{indexch}}: {{ch.Text}}</h3>
+                <hr>
+                <div class="form-check dapanhover" ng-repeat="da in ch.Answers">
+                    <input class="form-check-input mt-2" type="radio" name="flexRadioDefault{{ch.Id}}" id="flexRadioDefault{{da.Id}}"
+                        value="{{ch.Id}},{{da.Id}}" ng-model="cautl.idtl" ng-checked="cautl.idtl=='{{ch.Id}},{{da.Id}}'">
+                    <label class="form-check-label h5 m-1" for="flexRadioDefault{{da.Id}}">
+                        {{da.Text}}
+                    </label>
+                </div>
+            </div>
+            
+            <div class="card-body bg-dark" ng-if="!anhienKQ">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button btn btn-success" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Điểm số
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body ">
+                                <h4>Tổng điểm: {{tongdiem}} điểm</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed btn btn-success" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Đáp án
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body bg-secondary">
+                                <div class="card border" ng-repeat="ch1 in listch">
+                                    <div class="card-header">
+                                        <h4 class="card-title text-success" ng-if="tdtungcau(ch1.Id)==1">Câu
+                                            {{$index+1}}: {{ch1.Text}}</h4>
+                                        <h4 class="card-title text-danger" ng-if="tdtungcau(ch1.Id)==0">Câu
+                                            {{$index+1}}: {{ch1.Text}}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check" ng-repeat="da in ch1.Answers">
+                                            <label class="form-check-label h5" for="flexRadioDefault{{da.Id}}"
+                                                ng-switch="showDapan({{ch1.Id}},{{da.Id}})">
+                                                <span ng-switch-when="dung" class="text-success">
+                                                    <i class="fa-regular fa-circle-check"></i> {{da.Text}}</span>
+                                                <span ng-switch-when="sai" class="text-danger">
+                                                    <i class="fa-regular fa-circle-xmark"></i> {{da.Text}}</span>
+                                                <span ng-switch-when="binhthuong">
+                                                    <i class="fa-regular fa-circle"></i> {{da.Text}}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-muted text-end">
+                                        <span>Marks: {{tdtungcau(ch1.Id)}}/1</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                Tổng số câu: {{indexch}}/{{listch.length}}
+                <button class="btn btn-primary float-end" ng-click="tinhdiem()" ng-if="anhienKQ">Kết thúc</button>
+            </div>
+        </div>
+    </form>
+
+
+    <ul class="pagination justify-content-center">
+        <li class="page-item bg-light">
+            <button class="btn btn-outline-secondary" aria-label="Previous" ng-mouseup="prevch()" ng-mousedown="chonctl()"
+                ng-if="anhienKQ">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </button>
+        </li>
+        <li class="page-item bg-light">
+            <button class="btn btn-outline-secondary" aria-label="Next" ng-mouseup="nextch()" ng-mousedown="chonctl()" ng-if="anhienKQ">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </button>
+        </li>
+    </ul>
+</div>
+
+<!-- training -->

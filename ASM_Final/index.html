@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Quiz</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Bootstrap CSS v5.0.2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+    <link rel="stylesheet" href="css/dinhdang.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.8.0/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body ng-app="ASM">
+    <div class="container">
+        <!-- header -->
+        <header class="row">
+            <img class="ml-auto p-0" src="images/banner.png" />
+        </header>
+        <!-- header -->
+        <!-- Nav -->
+        <div ng-include="'navbar.html'"></div>
+        <!-- Nav -->
+        <!-- Modal -->
+        <div ng-include="'modal.html'"></div>
+        <!-- Modal -->
+        <!-- body -->
+        <div class="row" ng-controller="listmh">
+            <div class="col-sm-9" ng-view></div>
+            <aside class="col-sm-3 mb-3 pe-0" ng-include="'subjectlist.html'"></aside>
+        </div>
+        <!-- body -->
+        <!-- footer -->
+        <div ng-include="'footer.html'"></div>
+        <!-- footer -->
+    </div>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    <!-- <script src="db/Students.js"></script> -->
+    <script>
+        var app = angular.module("ASM", ["ngRoute"]);
+
+        app.config(function ($routeProvider) {
+            $routeProvider
+                .when("/introduce", { templateUrl: "introduce.html" })
+                .when("/contact", { templateUrl: "contact.html" })
+                .when("/feedback", { templateUrl: "feedback.html" })
+                .when("/Q&A", { templateUrl: "Q&A.html" })
+                .when("/updateaccount", { templateUrl: "updateaccount.html" })
+                .when("/training/:idmh/:tenMH", { templateUrl: "training.html", controller: "ktdn" })
+                .otherwise({ templateUrl: "home.html" });
+        });
+
+        app.controller("listmh", function ($scope, $http, $routeParams) {
+            $scope.cacmonhoc = [];
+            $http.get("db/Subjects.js").then(function (d) {
+                $scope.cacmonhoc = d.data;
+            });
+            $scope.startmn = 0;
+            $scope.next = function () {
+                if ($scope.startmn < $scope.cacmonhoc.length - 4) {
+                    $scope.startmn += 4;
+                } else {
+                    $scope.startmn = 0;
+                }
+            }
+            $scope.prev = function () {
+                if ($scope.startmn <= 0) {
+                    $scope.startmn = $scope.cacmonhoc.length - 4;
+                } else {
+                    $scope.startmn -= 4;
+                }
+            }
+            $scope.selectpage = function (chiso) {
+                switch (chiso) {
+                    case 1:
+                        $scope.startmn = 0;
+                        break;
+                    case 2:
+                        $scope.startmn = 4;
+                        break;
+                    case 3:
+                        $scope.startmn = 8;
+                        break;
+                    case 4:
+                        $scope.startmn = 12;
+                        break;
+                    case 5:
+                        $scope.startmn = 16;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        app.controller("ktdn", function ($scope, $http, $routeParams) {
+            if (sessionStorage.getItem("username") == "" || sessionStorage.getItem("username") == null) {
+                document.location = "#!home";
+                var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle'), {
+                    keyboard: false
+                })
+                var modalToggle = document.getElementById('exampleModalToggle');
+                myModal.show(modalToggle);
+            } else {
+                var idmh = $routeParams.idmh;
+                $scope.anhienKQ = true;
+                $scope.tenmthi = $routeParams.tenMH;
+                $scope.listch = [];
+                $scope.indexch = 1;
+                $scope.startch = 0;
+                $scope.tongdiem = 0;
+
+                $http.get("db/Quizs/" + idmh + ".js").then(function (d) {
+                    $scope.listch = d.data;
+                })
+
+                $scope.cautl = { idtl: '' };
+                var listtl = [];
+
+                $scope.chonctl = function () {
+                    var idch1 = $scope.cautl.idtl.substr(0, $scope.cautl.idtl.indexOf(","));
+                    var idtl1 = $scope.cautl.idtl.substr($scope.cautl.idtl.indexOf(",") + 1, $scope.cautl.idtl.length);
+                    var kt = true;
+
+                    if ($scope.cautl.idtl != '') {
+                        if (listtl != '') {
+                            for (let i = 0; i < listtl.length; i++) {
+                                if (listtl[i].idch == idch1) {
+                                    console.log("edit");
+                                    listtl.splice(i, 1, { idch: idch1, idtl: idtl1 });
+                                    kt = false;
+                                    break;
+                                }
+                            }
+                            if (kt) {
+                                console.log("add them");
+                                listtl.push({ idch: idch1, idtl: idtl1 });
+                            }
+                        } else {
+                            console.log("add 0");
+                            listtl.push({ idch: idch1, idtl: idtl1 });
+                        }
+                    }
+
+                    console.log(listtl);
+                }
+
+
+                $scope.tinhdiem = function () {
+                    $http.get("db/Quizs/" + idmh + ".js").then(function (d) {
+                        var listch1 = d.data;
+                        var listnew = [];
+                        console.log("list ctl");
+                        console.log(listtl);
+                        $scope.chonctl();
+                        if (listtl.length < listch1.length) {
+                            listnew = listtl;
+                            for (let i = 0; i < listch1.length; i++) {
+                                if (listtl[i] == undefined) {
+                                    listnew.push({ idch: listch1[i].Id.toString(), idtl: '' });
+                                } else if (listtl[i].idch == '') {
+                                    listnew.splice(i, 1, { idch: listch1[i].Id.toString(), idtl: '' });
+                                }
+                            }
+                        }
+
+                        if (listtl != '') {
+                            var diem = 0;
+                            listtl.forEach(element1 => {
+                                listch1.forEach(element2 => {
+                                    if (element1.idch == element2.Id) {
+                                        if (element1.idtl == element2.AnswerId) {
+                                            diem += element2.Marks;
+                                        }
+                                    }
+                                });
+                            });
+                            $scope.tongdiem = (10 / listch1.length) * diem;
+                            $scope.anhienKQ = false;
+                            $scope.showDapan = function (idch, idda) {
+                                var kq = "";
+                                listch1.forEach(element1 => {
+                                    listtl.forEach(element2 => {
+                                        if (idch == element1.Id && idch == element2.idch) {
+                                            if (idda == element1.AnswerId) {
+                                                kq = "dung";
+                                            } else {
+                                                if (idda == element2.idtl) {
+                                                    kq = "sai";
+                                                } else {
+                                                    kq = "binhthuong";
+                                                }
+                                            }
+                                            if (element2.idtl == '') {
+                                                kq = "binhthuong";
+                                            }
+                                        }
+                                    });
+                                });
+                                return kq;
+                            }
+
+                            $scope.tdtungcau = function (idch) {
+                                var tinhdiem1c = false;
+                                listch1.forEach(element1 => {
+                                    listtl.forEach(element2 => {
+                                        if (idch == element1.Id && idch == element2.idch) {
+                                            if (element1.AnswerId == element2.idtl) {
+                                                tinhdiem1c = true;
+                                            } else {
+                                                tinhdiem1c = false;
+                                            }
+                                        }
+                                    });
+                                });
+                                if (tinhdiem1c) {
+                                    return 1;
+                                } else return 0;
+                            }
+                        } else {
+                            $scope.tongdiem = 0;
+                            $scope.anhienKQ = false;
+                        }
+                    })
+                }
+
+                var historycheck = function (index) {
+                    listtl.forEach(element => {
+                        if (element.idch == $scope.listch[index].Id) {
+                            $scope.cautl.idtl = element.idch + "," + element.idtl;
+                        }
+                    });
+                }
+
+                $scope.nextch = function () {
+                    if ($scope.startch < $scope.listch.length - 1) {
+                        $scope.startch += 1;
+                        $scope.indexch += 1;
+                    }
+                    historycheck($scope.startch);
+
+                }
+
+                $scope.prevch = function () {
+                    if ($scope.startch > 0) {
+                        $scope.startch -= 1;
+                        $scope.indexch -= 1;
+                    }
+                    historycheck($scope.startch);
+                }
+
+            }
+        });
+
+        app.controller("signin", function ($scope, $http, $timeout) {
+            $scope.cdn = false;
+            $scope.dn = function () {
+                $scope.cdn = true;
+                $timeout(function () {
+                    var u = $scope.username;
+                    var p = $scope.password;
+                    var tc = false;
+                    var motsv;
+                    var listsv = [];
+                    $http.get("db/Students.js").then(function (d) {
+                        listsv = d.data;
+                        for (let i = 0; i < listsv.length; i++) {
+                            motsv = listsv[i];
+                            if (u == motsv.username && p == motsv.password) {
+                                tc = true;
+                                break;
+                            }
+                        }
+                        if (tc) {
+                            sessionStorage.setItem("username", motsv.username);
+                            sessionStorage.setItem("hoten", motsv.fullname);
+                            sessionStorage.setItem("email", motsv.email);
+                            document.location = "index.html";
+                        }
+                    });
+                }, 2000);
+            };
+            $scope.dx = function () {
+                sessionStorage.setItem("username", "");
+                sessionStorage.setItem("hoten", "");
+                document.location = "index.html";
+            };
+
+        });
+
+        app.controller("tttk", function ($scope, $http, $rootScope) {
+            var ht = sessionStorage.getItem("hoten");
+            var email = sessionStorage.getItem("email");
+
+            if (ht != null && ht != "") {
+                $scope.hoten = ht;
+                $scope.email = email;
+                $scope.tagdn = true;
+                $scope.tagdk = true;
+                $scope.tagqmk = true;
+                $scope.htdangnhap = true;
+            } else {
+                $scope.tagdn = false;
+                $scope.tagdk = false;
+                $scope.tagqmk = false;
+                $scope.htdangnhap = false;
+            }
+
+            $http.get("db/Students.js").then(function (d) {
+                $rootScope.listsv = d.data;
+                for (let i = 0; i < $rootScope.listsv.length; i++) {
+                    if (sessionStorage.getItem("username") == $rootScope.listsv[i].username) {
+                        $scope.tkht = angular.copy($rootScope.listsv[i]);
+                    }
+                }
+            });
+
+            $scope.updateaccout = function () {
+                for (let i = 0; i < $rootScope.listsv.length; i++) {
+                    if (sessionStorage.getItem("username") == $rootScope.listsv[i].username) {
+                        $rootScope.listsv[i] = $scope.tkht;
+                        $http.post("db/Students.js", $rootScope.listsv).then(
+                            function (response) {
+                                console.log(response);
+                                if (response.data)
+                                    alert("Post Data Submitted Successfully!");
+                            },
+                            function (response) {
+                                console.log(response);
+                            }
+                        );
+                    }
+                }
+                console.log($rootScope.listsv);
+            }
+
+
+        });
+
+        app.controller("signup", function ($scope, $http) {
+            var listsv1 = [];
+            $scope.newacc = [];
+            $scope.dangky = function () {
+                $http.get("db/Students.js").then(function (d) {
+                    listsv1 = d.data;
+                    var kt = false;
+                    for (let i = 0; i < listsv1.length; i++) {
+                        if (listsv1[i].username != $scope.newacc.usernamesignup) {
+                            kt = true;
+                        }
+                    }
+                    if (kt) {
+                        $http.put('db/Students.js', angular.toJson($scope.newacc)).then(function (d) {
+                            console.log(d);
+                        }).catch(function (d) {
+                            console.log("failed");
+                            console.log(d);
+                        })
+                    }
+                });
+            }
+       
+        })
+
+    </script>
+</body>
+<!-- script -->
+
+<!-- script -->
+
+</html> 
